@@ -1,0 +1,19 @@
+CREATE TABLE MaterialAudit (
+    audit_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    action VARCHAR(50),
+    subject VARCHAR(255),
+    topic VARCHAR(255),
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+DELIMITER //
+CREATE TRIGGER after_material_insert
+AFTER INSERT ON StudyMaterial
+FOR EACH ROW
+BEGIN
+    INSERT INTO MaterialAudit (title, action, subject, topic)
+    VALUES (NEW.title, 'ADDED', NEW.subject, NEW.topic);
+END;
+//
+DELIMITER ;
