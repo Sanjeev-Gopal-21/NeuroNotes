@@ -1,0 +1,5 @@
+ALTER TABLE StudyMaterial
+ADD COLUMN author VARCHAR(100),
+ADD COLUMN filename VARCHAR(255),
+ADD COLUMN user_id INT,
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
