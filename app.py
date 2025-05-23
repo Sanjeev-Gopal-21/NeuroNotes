@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from dotenv import load_dotenv
 load_dotenv()
 from db_config import get_db_connection
@@ -6,8 +6,6 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
-import jwt
-import datetime
 
 SECRET_KEY = os.getenv("SECRET_KEY", "mysecret")
 
@@ -46,11 +44,7 @@ def login():
     conn.close()
 
     if user and check_password_hash(user['password'], password):
-        token = jwt.encode({
-            'user_id': user['id'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
-        }, SECRET_KEY, algorithm='HS256')
-        return jsonify({'token': token, 'name': user['name']}), 200
+        return jsonify({'user_id':user['user_id'], 'name': user['name']}), 200
     else:
         return jsonify({'error': 'Invalid email or password'}), 401
 
@@ -135,12 +129,11 @@ def get_materials():
 
 @app.route('/upload-material', methods=['POST'])
 def upload_material():
-    file = request.files['file']
-    title = request.form.get('title')
+    file        = request.files['file']
+    title       = request.form.get('title')
     description = request.form.get('description')
-    subject = request.form.get('subject')
-    topic = request.form.get('topic')
-    author = request.form.get('author')
+    subject     = request.form.get('subject')
+    topic       = request.form.get('topic')
 
     filename = secure_filename(file.filename)
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -149,9 +142,9 @@ def upload_material():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO StudyMaterial (title, description, subject, topic, author, filename, url_or_path, user_id)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    """, (title, description, subject, topic, author, filename, file_path, request.user_id))
+        INSERT INTO StudyMaterial (title, description, subject, topic, url_or_path)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (title, description, subject, topic, file_path))
     conn.commit()
     cursor.close()
     conn.close()
@@ -189,6 +182,14 @@ def search_materials():
     conn.close()
 
     return jsonify(results)
+
+# Serve any file under uploads/ by filename
+@app.route('/uploads/<path:filename>')
+@cross_origin()
+def uploaded_file(filename):
+    # note: UPLOAD_FOLDER is absolute or relative to app root
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=False)
+
 
 # -------------------------------
 # Run Flask Server
