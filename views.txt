@@ -1,0 +1,6 @@
+CREATE VIEW vw_user_public_data AS
+SELECT 
+    user_id,
+    name,
+    email
+FROM User;
