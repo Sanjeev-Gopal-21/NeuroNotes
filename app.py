@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
+load_dotenv()
 from db_config import get_db_connection
 import os
 from werkzeug.utils import secure_filename

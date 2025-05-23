@@ -1,12 +1,16 @@
 import mysql.connector
-
+from dotenv import load_dotenv
+load_dotenv()
+import os
 # Replace these with your own MySQL login credentials
+print(os.getenv('db_user'))
 db_config = {
     'host': 'localhost',
-    'user': 'root',
-    'password': 'root123',  # change this
+    'user': os.getenv('db_user'),
+    'password': os.getenv('db_password'),
     'database': 'study_assistant_db'
 }
+
 
 try:
     conn = mysql.connector.connect(**db_config)
@@ -23,14 +27,14 @@ try:
     """)
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS StudyMaterial (
+        CREATE TABLE IF NOT EXISTS StudyMaterial (
         material_id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         subject VARCHAR(100) NOT NULL,
         topic VARCHAR(100) NOT NULL,
         url_or_path TEXT,
-        date_added DATE DEFAULT CURRENT_DATE
+        date_added DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     """)
 
@@ -51,7 +55,7 @@ try:
         title VARCHAR(255) NOT NULL,
         link TEXT NOT NULL,
         source VARCHAR(255),
-        scraped_on DATE DEFAULT CURRENT_DATE
+        scraped_on DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     """)
 
