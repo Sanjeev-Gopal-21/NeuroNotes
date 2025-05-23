@@ -1,0 +1,56 @@
+DELIMITER //
+CREATE TRIGGER before_insert_material
+BEFORE INSERT ON StudyMaterial
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM StudyMaterial WHERE title = NEW.title
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Material with this title already exists.';
+    END IF;
+END;
+//
+DELIMITER ;
+DELIMITER //
+CREATE TRIGGER before_insert_material
+BEFORE INSERT ON StudyMaterial
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM StudyMaterial WHERE title = NEW.title
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Material with this title already exists.';
+    END IF;
+END;
+//
+DELIMITER ;
+DELIMITER //
+CREATE TRIGGER before_insert_material
+BEFORE INSERT ON StudyMaterial
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM StudyMaterial WHERE title = NEW.title
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Material with this title already exists.';
+    END IF;
+END;
+//
+DELIMITER ;
+DELIMITER //
+CREATE TRIGGER before_insert_material
+BEFORE INSERT ON StudyMaterial
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM StudyMaterial WHERE title = NEW.title
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Material with this title already exists.';
+    END IF;
+END;
+//
+DELIMITER ;
